@@ -1,25 +1,52 @@
 import { useNavigation } from "@react-navigation/core";
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, {useState} from "react";
+import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, TextInput, Platform } from "react-native";
+import Today from "../components/Today";
 import { auth } from "../firebase";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [task, setTask]  = useState();
+  const [taskItems, setTaskItems] = useState([]);
 
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Login");
-      })
-      .catch((error) => alert(error.message));
-  };
+  const handleTask = () => {
+    setTaskItems([...taskItems, task])
+    setTask(null)
+  }
+
+
+  // const handleSignOut = () => {
+  //   auth
+  //     .signOut()
+  //     .then(() => {
+  //       navigation.replace("Login");
+  //     })
+  //     .catch((error) => alert(error.message));
+  // };
   return (
     <View style={styles.container}>
-      <Text>Email : {auth.currentUser?.email}</Text>
-      <TouchableOpacity onPress={handleSignOut} style={styles.button}>
-        <Text style={styles.buttonText}>Log Out</Text>
-      </TouchableOpacity>
+
+       <Today taskItems={taskItems}/>
+
+                 {/* Write a Task */}
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.writeTaskWrapper}
+            >
+                      <TextInput style={styles.input} placeholder={"Write a task"} 
+                        value={task}
+                        onChangeText={text => setTask(text)}
+                      />
+              <TouchableOpacity
+                      onPress={() => handleTask()}
+              >
+                  <View style={styles.addWrapper} >
+                      <Text style={styles.addText} 
+                      >+</Text>
+                  </View>
+              </TouchableOpacity>
+            </KeyboardAvoidingView> 
+
     </View>
   );
 };
@@ -29,20 +56,40 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
-  button: {
-    backgroundColor: "#0782F9",
-    width: "60%",
-    borderRadius: 10,
-    padding: 10,
-    alignItems: "center",
-    marginTop: 20,
+  
+   writeTaskWrapper: {
+    position: 'absolute',
+    bottom: 60,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
-  buttonText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "700",
+  input: {
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    backgroundColor: '#FFF',
+    borderRadius: 60,
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+    width: 250,
+  },    
+  addWrapper: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#FFF',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+  }, 
+  addText: {
+    fontSize: 30,
+    position: "absolute",
+    bottom: 10,
+    fontWeight: "600",
   },
+  
 });
