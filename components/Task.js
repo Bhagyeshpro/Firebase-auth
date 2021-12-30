@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-const Task = ({text}) => {
+const Task = ({title}) => {
     var date = new Date();
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -14,7 +14,7 @@ const Task = ({text}) => {
     return (
         <View style={styles.items}>
         <View style={styles.leftContainer}>
-        <Text style={{fontWeight: "470", fontSize: 14 }}>{text}</Text>
+        <Text style={{fontWeight: "470", fontSize: 14 }}>{title}</Text>
         </View>
         <View style={styles.rightContainer}>
             <Text style={{fontWeight: "500", fontSize: 15}}>{taskAddedTime}</Text>
